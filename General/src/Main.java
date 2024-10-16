@@ -1,4 +1,7 @@
-import java.io.File;
+import TodoList.ToDo;
+import TodoList.Variable;
+import TodoList.ascii;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -12,19 +15,24 @@ public class Main {
             while (!exit) {
                 System.out.print("What would you like to do? (add|remove|complete|list) ");
                 choice = input.nextLine();
-                if (choice.equalsIgnoreCase("exit")) {
-                    break;
-                } else if (choice.equalsIgnoreCase("add")) {
+
+                if (choice.equalsIgnoreCase("clear")) { Variable.clear(); }
+
+                if (choice.equalsIgnoreCase("exit")) { break; }
+
+                else if (choice.equalsIgnoreCase("add")) {
                     System.out.print("Enter task name: ");
                     choice = input.nextLine();
                     ToDo.addTask(choice);
-                } else if (choice.equalsIgnoreCase("remove")) {
+                }
+                else if (choice.equalsIgnoreCase("remove")) {
                     System.out.print("Which task? ");
                     choice = input.nextLine();
                     ToDo.removeTask(Integer.parseInt(choice));
-                } else if (choice.equalsIgnoreCase("list")) {
-                    ToDo.displayTasks();
-                } else if (choice.equalsIgnoreCase("complete")) {
+                }
+                else if (choice.equalsIgnoreCase("list")) { ToDo.displayTasks(); }
+
+                else if (choice.equalsIgnoreCase("complete")) {
                     System.out.print("Which task? ");
                     choice = input.nextLine();
                     ToDo.completeTask(Integer.parseInt(choice));
