@@ -6,32 +6,27 @@ public class Main {
     static Scanner input = new Scanner(System.in);
     static boolean exit = false;
     public static void main(String[] args) throws IOException {
-        System.out.print("What program would you like to use? " + ascii.cyan);
+        System.out.print("What program would you like to use? ");
         String choice = input.nextLine();
-        System.out.print(ascii.reset);
         if (choice.toLowerCase().contains("todo")) {
             while (!exit) {
-                System.out.print("What would you like to do? (add|remove|complete|list) " + ascii.cyan);
+                System.out.print("What would you like to do? (add|remove|complete|list) ");
                 choice = input.nextLine();
-
                 if (choice.equalsIgnoreCase("exit")) {
                     break;
                 } else if (choice.equalsIgnoreCase("add")) {
-                    System.out.print("Enter task name: " + ascii.cyan);
+                    System.out.print("Enter task name: ");
                     choice = input.nextLine();
-                    System.out.print(ascii.reset);
                     ToDo.addTask(choice);
                 } else if (choice.equalsIgnoreCase("remove")) {
-                    System.out.print("Which task? " + ascii.cyan);
+                    System.out.print("Which task? ");
                     choice = input.nextLine();
-                    System.out.print(ascii.reset);
                     ToDo.removeTask(Integer.parseInt(choice));
                 } else if (choice.equalsIgnoreCase("list")) {
                     ToDo.displayTasks();
                 } else if (choice.equalsIgnoreCase("complete")) {
-                    System.out.print("Which task? " + ascii.cyan);
+                    System.out.print("Which task? ");
                     choice = input.nextLine();
-                    System.out.print(ascii.reset);
                     ToDo.completeTask(Integer.parseInt(choice));
                 }
             }
