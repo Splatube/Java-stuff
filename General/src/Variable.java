@@ -1,16 +1,23 @@
-import java.util.*;
-import java.io.*;
+import java.util.*; import java.io.*; import java.nio.*;
 
 public class Variable {
-    OutputStream output = new FileOutputStream("/home/deck/Documents/Programs/Java/General/src/app.properties");
     static Properties prop = new Properties();
-    public Variable() throws FileNotFoundException {}
+    static String propPath = "/home/deck/Documents/Programs/Java/General/src/tasks.properties";
 
-    public static Object getVariable(String name) {
-        return prop.getProperty(name);
+    public static Properties loadProperties() throws IOException {
+        prop.load(new FileInputStream(propPath));
+        return prop;
     }
 
-    public static void storeVariable(String name, String value) {
+    public static void storeVariable(String name, String value) throws IOException {
+        prop.load(new FileInputStream(propPath));
         prop.setProperty(name, value);
+        prop.store(new FileWriter(propPath), null);
+    }
+
+    public static void removeVariable(String name) throws IOException {
+        prop.load(new FileInputStream(propPath));
+        prop.remove(name);
+        prop.store(new FileWriter(propPath), null);
     }
 }

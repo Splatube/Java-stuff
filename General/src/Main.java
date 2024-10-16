@@ -1,17 +1,19 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class Main {
     static Scanner input = new Scanner(System.in);
     static boolean exit = false;
-    public static void main(String[] args) {
-        /*System.out.print("What program would you like to use? " + ascii.cyan);
+    public static void main(String[] args) throws IOException {
+        System.out.print("What program would you like to use? " + ascii.cyan);
         String choice = input.nextLine();
         System.out.print(ascii.reset);
-        if (choice.equalsIgnoreCase("todo list")) {
+        if (choice.toLowerCase().contains("todo")) {
             while (!exit) {
                 System.out.print("What would you like to do? (add|remove|complete|list) " + ascii.cyan);
                 choice = input.nextLine();
-                System.out.print(ascii.reset);
+
                 if (choice.equalsIgnoreCase("exit")) {
                     break;
                 } else if (choice.equalsIgnoreCase("add")) {
@@ -33,7 +35,8 @@ public class Main {
                     ToDo.completeTask(Integer.parseInt(choice));
                 }
             }
-        }*/
-        System.out.println(Thread.currentThread().getContextClassLoader().getResource("").getPath());
+        } else {
+            System.out.println(ascii.red + "Invalid program" + ascii.reset);
+        }
     }
 }

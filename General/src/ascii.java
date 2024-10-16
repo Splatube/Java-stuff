@@ -8,4 +8,7 @@ public class ascii {
     public static final String purple = "\u001B[35m";
     public static final String cyan = "\u001B[36m";
     public static final String white = "\u001B[37m";
+    public static void clear() {
+        System.out.print("clearConsole");
+    }
 }
