@@ -12,10 +12,14 @@ public class Main {
             String choice = input.nextLine();
             if (choice.toLowerCase().contains("todo")) {
                 while (!exit) {
-                    System.out.print("What would you like to do? (add|remove|complete|list) ");
+                    System.out.print("What would you like to do? ");
                     choice = input.nextLine();
                     if (choice.equalsIgnoreCase("clear")) {
                         ToDo.clearTasks();
+                    } else if (choice.equalsIgnoreCase("search")) {
+                        ToDo.searchTags();
+                    } else if (choice.equalsIgnoreCase("tag")) {
+                        ToDo.addTag();
                     } else if (choice.equalsIgnoreCase("exit")) {
                         break;
                     } else if (choice.equalsIgnoreCase("add")) {

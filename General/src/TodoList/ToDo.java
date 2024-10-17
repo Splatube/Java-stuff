@@ -2,7 +2,6 @@ package TodoList;
 
 import java.util.*;
 import java.io.*;
-import java.time.LocalDateTime;
 
 public class ToDo {
     static Properties tasks = new Properties();
@@ -31,9 +30,14 @@ public class ToDo {
     public static void addTag() throws IOException {
         System.out.print("Which task? ");
         String name = input.nextLine();
-        System.out.print("Enter tag: ");
-        String tag = "[" + input.nextLine() + "]";
-        Variable.addValueToKey(name, tag);
+        if (tasks.containsKey(name)) {
+            System.out.print("Enter tag: ");
+            String tag = "[" + input.nextLine() + "]";
+            Variable.addValueToKey(name, tag);
+            System.out.println(ascii.green + "Added tag" + ascii.reset);
+        } else {
+            System.out.printf("%sNo task named '%s'%s%n", ascii.red, name, ascii.reset);
+        }
     }
 
     public static void completeTask(String name) throws IOException {
@@ -58,15 +62,64 @@ public class ToDo {
         }
     }
 
+    public static void searchTags() throws IOException {
+        loadTasks();
+        System.out.print("Enter tag/status: ");
+        String tag = input.nextLine();
+        if (tasks.containsValue(tag)) {
+            for (String name : tasks.stringPropertyNames()) {
+                String status = tasks.getProperty(name);
+                String[] values = tasks.getProperty(name).split(",");
+                if (tag.equalsIgnoreCase("complete")) {
+                    if (status.contains("[")) {
+                        for (int i = 1; i < values.length; i++) {
+                            System.out.print(ascii.blue + values[i] + " " + ascii.reset);
+                        }
+                    } else if (status.contains("complete")) {
+                        System.out.printf("%s : %sComplete%s%n", name, ascii.green, ascii.reset);
+                    }
+                } else if (tag.equalsIgnoreCase("incomplete")) {
+                    if (status.contains("[")) {
+                        for (int i = 1; i < values.length; i++) {
+                            System.out.print(ascii.blue + values[i] + " " + ascii.reset);
+                        }
+                    } else if (status.contains("incomplete")) {
+                        System.out.printf("%s : %sIncomplete%s%n", name, ascii.red, ascii.reset);
+                    }
+                }
+                for (int i = 1; i < values.length; i++) {
+                    if (values[i].equalsIgnoreCase(tag)) {
+                        System.out.print(ascii.blue + ascii.bold + values[i] + " " + ascii.reset);
+                    } else {
+                        System.out.print(ascii.blue + values[i] + " " + ascii.reset);
+                    }
+                }
+                if (status.contains("incomplete")) {
+                    System.out.printf("%s : %sIncomplete%s%n", name, ascii.red, ascii.reset);
+                } else if (status.contains("complete")) {
+                    System.out.printf("%s : %sComplete%s%n", name, ascii.green, ascii.reset);
+                }
+            }
+        } else {
+            System.out.println(ascii.red + "No tasks found" + ascii.reset);
+        }
+    }
+
     public static void displayTasks() throws IOException {
         loadTasks();
         if (!tasks.isEmpty()) {
             System.out.println("To do list:");
             for (String name : tasks.stringPropertyNames()) {
                 String status = tasks.getProperty(name);
-                if ("incomplete".equals(status)) {
+                String[] values = tasks.getProperty(name).split(",");
+                if (status.contains("[")) {
+                    for (int i = 1; i < values.length; i++) {
+                        System.out.print(ascii.blue + values[i] + " " + ascii.reset);
+                    }
+                }
+                if (status.contains("incomplete")) {
                     System.out.printf("%s : %sIncomplete%s%n", name, ascii.red, ascii.reset);
-                } else {
+                } else if (status.contains("complete")){
                     System.out.printf("%s : %sComplete%s%n", name, ascii.green, ascii.reset);
                 }
             }
