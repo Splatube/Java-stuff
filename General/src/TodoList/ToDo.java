@@ -2,53 +2,72 @@ package TodoList;
 
 import java.util.*;
 import java.io.*;
+import java.time.LocalDateTime;
 
 public class ToDo {
-    static List<Object[]> Tasks = new ArrayList<>();
+    static Properties tasks = new Properties();
+    static Scanner input = new Scanner(System.in);
+    static String choice;
+    static String propPath = "/home/deck/Documents/Programs/Java/General/src/TodoList/tasks.properties";
 
-    public static void loadTasks() throws IOException {
-        Tasks.clear();
-        Properties prop = Variable.loadProperties();
-        for (String name : prop.stringPropertyNames()) {
-            String status = prop.getProperty(name);
-            Tasks.add(new Object[] {name, status});
+    private static void loadTasks() throws IOException {
+        tasks.load(new FileInputStream(propPath));
+    }
+
+    public static void clearTasks() throws IOException {
+        System.out.print("Are you sure? ");
+        choice = input.nextLine();
+        if (choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("y")) {
+            Variable.clear();
+            System.out.printf("%sCleared tasks%s%n", ascii.red, ascii.reset);
         }
     }
 
     public static void addTask(String name) throws IOException {
-        Tasks.add(new Object[] {name, "incomplete"});
         Variable.storeVariable(name, "incomplete");
         System.out.printf(ascii.green + "Added '%s'%n" + ascii.reset, name);
     }
 
-    public static void completeTask(int num) throws IOException {
-        if (!"complete".equals(Tasks.get(num - 1)[1])) {
-            Object[] task = Tasks.get(num - 1);
-            task[1] = "complete";
-            Tasks.set(num - 1, task);
-            Variable.storeVariable((String) task[0], "complete");
-            System.out.printf("%s'%s' completed!%s%n", ascii.green, task[0], ascii.reset);
+    public static void addTag() throws IOException {
+        System.out.print("Which task? ");
+        String name = input.nextLine();
+        System.out.print("Enter tag: ");
+        String tag = "[" + input.nextLine() + "]";
+        Variable.addValueToKey(name, tag);
+    }
+
+    public static void completeTask(String name) throws IOException {
+        if (tasks.containsKey(name)) {
+            if ("incomplete".equals(tasks.getProperty(name))) {
+                Variable.storeVariable(name, "complete");
+                System.out.printf("%s'%s' completed!%s%n", ascii.green, name, ascii.reset);
+            } else {
+                System.out.println("Task is already completed!");
+            }
         } else {
-            System.out.println("Task is already completed!");
+            System.out.println("Task does not exist!");
         }
     }
 
-    public static void removeTask(int num) throws IOException {
-        System.out.printf("%sRemoved '%s'%s%n", ascii.red, Tasks.get(num - 1)[0], ascii.reset);
-        Variable.removeVariable((String) Tasks.get(num - 1)[0]);
-        Tasks.remove(num - 1);
+    public static void removeTask(String name) throws IOException {
+        if (tasks.containsKey(name)) {
+            Variable.removeVariable(name);
+            System.out.printf("%sRemoved '%s'%s%n", ascii.red, name, ascii.reset);
+        } else {
+            System.out.println("Task does not exist!");
+        }
     }
 
     public static void displayTasks() throws IOException {
-        loadTasks(); // Load tasks from properties file
-        if (!Tasks.isEmpty()) {
+        loadTasks();
+        if (!tasks.isEmpty()) {
             System.out.println("To do list:");
-            for (int num = 0; num < Tasks.size(); num++) {
-                String status = (String) Tasks.get(num)[1];
+            for (String name : tasks.stringPropertyNames()) {
+                String status = tasks.getProperty(name);
                 if ("incomplete".equals(status)) {
-                    System.out.printf("%s) %s : %sIncomplete%s%n", num + 1, Tasks.get(num)[0].toString(), ascii.red, ascii.reset);
+                    System.out.printf("%s : %sIncomplete%s%n", name, ascii.red, ascii.reset);
                 } else {
-                    System.out.printf("%s) %s : %sComplete%s%n", num + 1, Tasks.get(num)[0].toString(), ascii.green, ascii.reset);
+                    System.out.printf("%s : %sComplete%s%n", name, ascii.green, ascii.reset);
                 }
             }
         } else {
