@@ -13,23 +13,61 @@ public class Main {
             if (choice.toLowerCase().contains("todo")) {
                 File taskList = new File("General/src/TodoList/tasks.properties");
                 taskList.createNewFile();
-                while (!exit) {
-                    System.out.print("What would you like to do? ");
+                while (true) {
+                    System.out.println("Options:");
+                    System.out.println("1. Add task");
+                    System.out.println("2. Add tag");
+                    System.out.println("3. Complete task");
+                    System.out.println("4. Remove task");
+                    System.out.println("5. Display tasks");
+                    System.out.println("6. Search tags");
+                    System.out.println("7. Sort tasks");
+                    System.out.println("8. Clear tasks");
+                    System.out.println("9. Exit");
+                    System.out.print("Choose an option: ");
                     choice = input.nextLine();
-                    if (choice.equalsIgnoreCase("clear")) {ToDo.clearTasks();}
-                    else if (choice.equalsIgnoreCase("search")) {ToDo.searchTags();}
-                    else if (choice.equalsIgnoreCase("tag")) {ToDo.addTag();}
-                    else if (choice.equalsIgnoreCase("exit")) {break;}
-                    else if (choice.equalsIgnoreCase("add")) {ToDo.addTask();}
-                    else if (choice.equalsIgnoreCase("remove")) {ToDo.removeTask();}
-                    else if (choice.equalsIgnoreCase("list")) {ToDo.displayTasks();}
-                    else if (choice.equalsIgnoreCase("complete")) {ToDo.completeTask();}
-                    else {System.out.println(ascii.red + "Invalid option" + ascii.reset);}
+                    switch (choice) {
+                        case "1":
+                            ToDo.addTask();
+                            break;
+                        case "2":
+                            ToDo.addTag();
+                            break;
+                        case "3":
+                            ToDo.completeTask();
+                            break;
+                        case "4":
+                            ToDo.removeTask();
+                            break;
+                        case "5":
+                            ToDo.displayTasks();
+                            break;
+                        case "6":
+                            ToDo.searchTags();
+                            break;
+                        case "7":
+                            System.out.println("Sort by:");
+                            System.out.println("1. Priority");
+                            System.out.println("2. Alphabetical");
+                            System.out.println("3. Completion status");
+                            System.out.print("Choose an option: ");
+                            String sortOption = input.nextLine();
+                            switch (sortOption) {
+                                case "1" -> ToDo.sortTasks("priority");
+                                case "2" -> ToDo.sortTasks("alphabetical");
+                                case "3" -> ToDo.sortTasks("completion");
+                            }
+                            break;
+                        case "8":
+                            ToDo.clearTasks();
+                            break;
+                        case "9":
+                            System.exit(0);
+                            break;
+                        default:
+                            System.out.println("Invalid option");
+                    }
                 }
-            } else if (choice.equalsIgnoreCase("exit")) {
-                break;
-            } else {
-                System.out.println(ascii.red + "Invalid program" + ascii.reset);
             }
         }
     }
