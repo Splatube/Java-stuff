@@ -11,6 +11,8 @@ public class Main {
             System.out.print("What program would you like to use? ");
             String choice = input.nextLine();
             if (choice.toLowerCase().contains("todo")) {
+                File taskList = new File("General/src/TodoList/tasks.properties");
+                taskList.createNewFile();
                 while (!exit) {
                     System.out.print("What would you like to do? ");
                     choice = input.nextLine();

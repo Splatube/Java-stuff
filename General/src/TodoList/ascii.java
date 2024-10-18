@@ -8,7 +8,7 @@ public class ascii {
     public static final String yellow = "\u001B[33m";
     public static final String blue = "\u001B[34m";
     public static final String purple = "\u001B[35m";
-    public static final String cyan = "\u001B[36m";
+    public static final String orange = "\u001B[36m";
     public static final String grey = "\u001B[37m";
     public static final String white = "\033[0;97m";
     public static final String bold = "\033[0;1m";

@@ -25,11 +25,19 @@ public class ToDo {
     public static void addTask() throws IOException {
         System.out.print("Enter task name: ");
         String name = input.nextLine();
-        Variable.storeVariable(name, "incomplete");
-        System.out.printf(ascii.green + "Added '%s'%n" + ascii.reset, name);
+        if (!tasks.containsKey(name)) {
+            System.out.print("Enter priority level: ");
+            String priority = input.nextLine();
+            Variable.storeVariable(name, "incomplete");
+            Variable.addValueToKey(name, "`" + priority);
+            System.out.printf(ascii.green + "Added '%s'%n" + ascii.reset, name);
+        } else {
+            System.out.printf(ascii.red + "'%s' already exists%n" + ascii.reset, name);
+        }
     }
 
     public static void addTag() throws IOException {
+        loadTasks();
         System.out.print("Which task? ");
         String name = input.nextLine();
         if (tasks.containsKey(name)) {
@@ -43,6 +51,7 @@ public class ToDo {
     }
 
     public static void completeTask() throws IOException {
+        loadTasks();
         System.out.print("Which task? ");
         String name = input.nextLine();
         if (tasks.containsKey(name)) {
@@ -59,6 +68,7 @@ public class ToDo {
     }
 
     public static void removeTask() throws IOException {
+        loadTasks();
         System.out.print("Enter task name: ");
         String name = input.nextLine();
         if (tasks.containsKey(name)) {
@@ -75,7 +85,7 @@ public class ToDo {
 
     public static void searchTags() throws IOException {
         loadTasks();
-        System.out.print("Enter tag/status: ");
+        System.out.print("Filter tasks: ");
         String tag = input.nextLine();
         if (tasks.values().toString().toLowerCase().contains(tag.toLowerCase())) {
             for (String name : tasks.stringPropertyNames()) {
@@ -83,8 +93,9 @@ public class ToDo {
                 String[] values = tasks.getProperty(name).split(",");
                 if (tag.equalsIgnoreCase("complete")) {
                     if (!status.contains("incomplete")) {
+                        System.out.print(ascii.orange +"("+values[1].replace("`","")+") "+ascii.reset);
                         if (status.contains("[")) {
-                            for (int i = 1; i < values.length; i++) {
+                            for (int i = 2; i < values.length; i++) {
                                 System.out.print(ascii.blue + values[i] + " " + ascii.reset);
                             }
                         }
@@ -92,15 +103,17 @@ public class ToDo {
                     }
                 } else if (tag.equalsIgnoreCase("incomplete")) {
                     if (status.contains("incomplete")) {
+                        System.out.print(ascii.orange +"("+values[1].replace("`","")+") "+ascii.reset);
                         if (status.contains("[")) {
-                            for (int i = 1; i < values.length; i++) {
+                            for (int i = 2; i < values.length; i++) {
                                 System.out.print(ascii.blue + values[i] + " " + ascii.reset);
                             }
                         }
                         System.out.printf("%s : %sIncomplete%s%n", name, ascii.red, ascii.reset);
                     }
                 } else if (tasks.getProperty(name).toLowerCase().contains("[" + tag.toLowerCase() + "]")) {
-                    for (int i = 1; i < values.length; i++) {
+                    System.out.print(ascii.orange +"("+values[1].replace("`","")+") "+ascii.reset);
+                    for (int i = 2; i < values.length; i++) {
                         if (values[i].equalsIgnoreCase("["+tag+"]")) {
                             System.out.print(ascii.blue_bold + values[i] + " " + ascii.reset);
                         } else {
@@ -112,16 +125,33 @@ public class ToDo {
                     } else if (status.contains("complete")) {
                         System.out.printf("%s : %sComplete%s%n", name, ascii.green, ascii.reset);
                     }
+                } else if (tag.matches("[0-3]") && tag.matches("\\d\\D")) {
+                    if (Arrays.toString(values).contains(tag)) {
+                        System.out.print(ascii.orange +"("+values[1].replace("`","")+") "+ascii.reset);
+                        for (int i = 2; i < values.length; i++) {
+                            if (values[i].equalsIgnoreCase("["+tag+"]")) {
+                                System.out.print(ascii.blue_bold + values[i] + " " + ascii.reset);
+                            } else {
+                                System.out.print(ascii.blue + values[i] + " " + ascii.reset);
+                            }
+                        }
+                        if (status.contains("incomplete")) {
+                            System.out.printf("%s : %sIncomplete%s%n", name, ascii.red, ascii.reset);
+                        } else if (status.contains("complete")) {
+                            System.out.printf("%s : %sComplete%s%n", name, ascii.green, ascii.reset);
+                        }
+                    }
                 }
             }
         } else if (tasks.keySet().toString().contains(tag)) {
             String[] values = tasks.getProperty(tag).split(",");
             String status = tasks.getProperty(tag);
             if (tasks.getProperty(tag).contains("[")) {
-                for (int i = 1; i < values.length; i++) {
+                for (int i = 2; i < values.length; i++) {
                     System.out.print(ascii.blue + values[i] + " " + ascii.reset);
                 }
             }
+            System.out.print(ascii.orange +"("+values[1].replace("`","")+") "+ascii.reset);
             if (status.contains("incomplete")) {
                 System.out.printf("%s : %sIncomplete%s%n", tag, ascii.red, ascii.reset);
             } else if (status.contains("complete")) {
@@ -139,8 +169,9 @@ public class ToDo {
             for (String name : tasks.stringPropertyNames()) {
                 String status = tasks.getProperty(name);
                 String[] values = tasks.getProperty(name).split(",");
+                System.out.print(ascii.orange +"("+values[1].replace("`","")+") "+ascii.reset);
                 if (status.contains("[")) {
-                    for (int i = 1; i < values.length; i++) {
+                    for (int i = 2; i < values.length; i++) {
                         System.out.print(ascii.blue + values[i] + " " + ascii.reset);
                     }
                 }
