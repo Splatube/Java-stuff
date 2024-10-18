@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Variable {
     static Properties prop = new Properties();
-    static String propPath = "/home/deck/Documents/Programs/Java/General/src/TodoList/tasks.properties";
+    static String propPath = "General/src/TodoList/tasks.properties";
 
     public static void loadProperties() throws IOException {
         try (FileInputStream input = new FileInputStream(propPath)) {

@@ -7,7 +7,7 @@ public class ToDo {
     static Properties tasks = new Properties();
     static Scanner input = new Scanner(System.in);
     static String choice;
-    static String propPath = "/home/deck/Documents/Programs/Java/General/src/TodoList/tasks.properties";
+    static String propPath = "General/src/TodoList/tasks.properties";
 
     private static void loadTasks() throws IOException {
         tasks.load(new FileInputStream(propPath));
@@ -46,7 +46,7 @@ public class ToDo {
         System.out.print("Which task? ");
         String name = input.nextLine();
         if (tasks.containsKey(name)) {
-            if ("incomplete".equals(tasks.getProperty(name))) {
+            if (tasks.getProperty(name).contains("incomplete")) {
                 Variable.storeVariable(name, "complete");
                 System.out.printf("%s'%s' completed!%s%n", ascii.green, name, ascii.reset);
             } else {
