@@ -22,7 +22,9 @@ public class ToDo {
         }
     }
 
-    public static void addTask(String name) throws IOException {
+    public static void addTask() throws IOException {
+        System.out.print("Enter task name: ");
+        String name = input.nextLine();
         Variable.storeVariable(name, "incomplete");
         System.out.printf(ascii.green + "Added '%s'%n" + ascii.reset, name);
     }
@@ -40,7 +42,9 @@ public class ToDo {
         }
     }
 
-    public static void completeTask(String name) throws IOException {
+    public static void completeTask() throws IOException {
+        System.out.print("Which task? ");
+        String name = input.nextLine();
         if (tasks.containsKey(name)) {
             if ("incomplete".equals(tasks.getProperty(name))) {
                 Variable.storeVariable(name, "complete");
@@ -53,7 +57,9 @@ public class ToDo {
         }
     }
 
-    public static void removeTask(String name) throws IOException {
+    public static void removeTask() throws IOException {
+        System.out.print("Enter task name: ");
+        String name = input.nextLine();
         if (tasks.containsKey(name)) {
             Variable.removeVariable(name);
             System.out.printf("%sRemoved '%s'%s%n", ascii.red, name, ascii.reset);
@@ -62,42 +68,48 @@ public class ToDo {
         }
     }
 
+    public static void addDate() {
+
+    }
+
     public static void searchTags() throws IOException {
         loadTasks();
         System.out.print("Enter tag/status: ");
         String tag = input.nextLine();
-        if (tasks.containsValue(tag)) {
+        if (tasks.values().toString().toLowerCase().contains(tag.toLowerCase())) {
             for (String name : tasks.stringPropertyNames()) {
                 String status = tasks.getProperty(name);
                 String[] values = tasks.getProperty(name).split(",");
                 if (tag.equalsIgnoreCase("complete")) {
-                    if (status.contains("[")) {
-                        for (int i = 1; i < values.length; i++) {
+                    if (!status.contains("incomplete"))
+                        if (status.contains("[")) {
+                            for (int i = 1; i < values.length; i++) {
+                                System.out.print(ascii.blue + values[i] + " " + ascii.reset);
+                            }
+                            System.out.printf("%s : %sComplete%s%n", name, ascii.green, ascii.reset);
+                        }
+                } else if (tag.equalsIgnoreCase("incomplete")) {
+                    if (status.contains("incomplete")) {
+                        if (status.contains("[")) {
+                            for (int i = 1; i < values.length; i++) {
+                                System.out.print(ascii.blue + values[i] + " " + ascii.reset);
+                            }
+                            System.out.printf("%s : %sIncomplete%s%n", name, ascii.red, ascii.reset);
+                        }
+                    }
+                } else if (tasks.getProperty(name).toString().toLowerCase().contains("["+tag.toLowerCase()+"]")){
+                    for (int i = 1; i < values.length; i++) {
+                        if (values[i].equalsIgnoreCase(tag)) {
+                            System.out.print(ascii.blue + ascii.bold + values[i] + " " + ascii.reset);
+                        } else {
                             System.out.print(ascii.blue + values[i] + " " + ascii.reset);
                         }
+                    }
+                    if (status.contains("incomplete")) {
+                        System.out.printf("%s : %sIncomplete%s%n", name, ascii.red, ascii.reset);
                     } else if (status.contains("complete")) {
                         System.out.printf("%s : %sComplete%s%n", name, ascii.green, ascii.reset);
                     }
-                } else if (tag.equalsIgnoreCase("incomplete")) {
-                    if (status.contains("[")) {
-                        for (int i = 1; i < values.length; i++) {
-                            System.out.print(ascii.blue + values[i] + " " + ascii.reset);
-                        }
-                    } else if (status.contains("incomplete")) {
-                        System.out.printf("%s : %sIncomplete%s%n", name, ascii.red, ascii.reset);
-                    }
-                }
-                for (int i = 1; i < values.length; i++) {
-                    if (values[i].equalsIgnoreCase(tag)) {
-                        System.out.print(ascii.blue + ascii.bold + values[i] + " " + ascii.reset);
-                    } else {
-                        System.out.print(ascii.blue + values[i] + " " + ascii.reset);
-                    }
-                }
-                if (status.contains("incomplete")) {
-                    System.out.printf("%s : %sIncomplete%s%n", name, ascii.red, ascii.reset);
-                } else if (status.contains("complete")) {
-                    System.out.printf("%s : %sComplete%s%n", name, ascii.green, ascii.reset);
                 }
             }
         } else {

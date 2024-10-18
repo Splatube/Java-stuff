@@ -14,31 +14,15 @@ public class Main {
                 while (!exit) {
                     System.out.print("What would you like to do? ");
                     choice = input.nextLine();
-                    if (choice.equalsIgnoreCase("clear")) {
-                        ToDo.clearTasks();
-                    } else if (choice.equalsIgnoreCase("search")) {
-                        ToDo.searchTags();
-                    } else if (choice.equalsIgnoreCase("tag")) {
-                        ToDo.addTag();
-                    } else if (choice.equalsIgnoreCase("exit")) {
-                        break;
-                    } else if (choice.equalsIgnoreCase("add")) {
-                        System.out.print("Enter task name: ");
-                        choice = input.nextLine();
-                        ToDo.addTask(choice);
-                    } else if (choice.equalsIgnoreCase("remove")) {
-                        System.out.print("Which task? ");
-                        choice = input.nextLine();
-                        ToDo.removeTask(choice);
-                    } else if (choice.equalsIgnoreCase("list")) {
-                        ToDo.displayTasks();
-                    } else if (choice.equalsIgnoreCase("complete")) {
-                        System.out.print("Which task? ");
-                        choice = input.nextLine();
-                        ToDo.completeTask(choice);
-                    } else {
-                        System.out.println(ascii.red + "Invalid option" + ascii.reset);
-                    }
+                    if (choice.equalsIgnoreCase("clear")) {ToDo.clearTasks();}
+                    else if (choice.equalsIgnoreCase("search")) {ToDo.searchTags();}
+                    else if (choice.equalsIgnoreCase("tag")) {ToDo.addTag();}
+                    else if (choice.equalsIgnoreCase("exit")) {break;}
+                    else if (choice.equalsIgnoreCase("add")) {ToDo.addTask();}
+                    else if (choice.equalsIgnoreCase("remove")) {ToDo.removeTask();}
+                    else if (choice.equalsIgnoreCase("list")) {ToDo.displayTasks();}
+                    else if (choice.equalsIgnoreCase("complete")) {ToDo.completeTask();}
+                    else {System.out.println(ascii.red + "Invalid option" + ascii.reset);}
                 }
             } else if (choice.equalsIgnoreCase("exit")) {
                 break;
