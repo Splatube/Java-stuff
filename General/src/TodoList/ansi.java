@@ -1,6 +1,6 @@
 package TodoList;
 
-public class ascii {
+public class ansi {
     public static final String reset = "\u001B[0m";
     public static final String black = "\u001B[30m";
     public static final String red = "\u001B[31m";
