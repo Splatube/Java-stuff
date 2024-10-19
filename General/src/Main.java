@@ -13,7 +13,7 @@ public class Main {
                 File taskList = new File("General/src/TodoList/tasks.properties");
                 taskList.createNewFile();
                 while (true) {
-                    System.out.println("Options:");
+                    System.out.println(ansi.white + "Options:" + ansi.reset);
                     System.out.println("1. Add task");
                     System.out.println("2. Add tag");
                     System.out.println("3. Complete task");
@@ -38,13 +38,21 @@ public class Main {
                             ToDo.removeTask();
                             break;
                         case "5":
-                            ToDo.displayTasks();
+                            Set<String> attributesToShow = new HashSet<>();
+                            System.out.println(ansi.white + "Choose attributes to display:" + ansi.reset);
+                            System.out.println("Priority, Due Date,Tags, Status");
+                            System.out.print("Enter your choices: ");
+                            String[] choices = input.nextLine().split(",");
+                            for (String c : choices) {
+                                attributesToShow.add(c.trim());
+                            }
+                            ToDo.displayTasks(attributesToShow);
                             break;
                         case "6":
                             ToDo.searchTags();
                             break;
                         case "7":
-                            System.out.println("Sort by:");
+                            System.out.println(ansi.white + "Sort by:" + ansi.reset);
                             System.out.println("1. Priority");
                             System.out.println("2. Alphabetical");
                             System.out.println("3. Completion status");
