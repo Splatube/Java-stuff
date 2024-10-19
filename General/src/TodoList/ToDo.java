@@ -10,6 +10,10 @@ public class ToDo {
     static String choice;
     static String propPath = "General/src/TodoList/tasks.properties";
 
+    public static void printSeparator() {
+        System.out.println("\n========================================\n");
+    }
+
     private static void loadTasks() throws IOException {
         tasks.load(new FileInputStream(propPath));
     }
@@ -103,6 +107,7 @@ public class ToDo {
 
     public static void displayTasks(Set<String> attributesToShow) throws IOException {
         loadTasks();
+        printSeparator();
         if (!tasks.isEmpty()) {
             System.out.println(ansi.white + "To do list:" + ansi.reset);
             for (String name : tasks.stringPropertyNames()) {
@@ -131,6 +136,7 @@ public class ToDo {
     public static void searchTags() throws IOException {
         loadTasks();
         System.out.print("Filter tasks: "); String tag = input.nextLine();
+        printSeparator();
         if (tag.matches("[0-3]")) {
             System.out.printf(ansi.white + "Priority %s tasks:%n" + ansi.reset, tag);
             for (String name : tasks.stringPropertyNames()) {
@@ -208,7 +214,7 @@ public class ToDo {
         loadTasks();
         TreeMap<String, String> sortedTasks = new TreeMap<>();
         String sortType = "";
-
+        printSeparator();
         if (option.equalsIgnoreCase("priority")) {
             System.out.println(ansi.white + "Tasks (priority ↓):" + ansi.reset);
             for (String name : tasks.stringPropertyNames()) {
