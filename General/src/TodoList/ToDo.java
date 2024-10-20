@@ -2,6 +2,7 @@ package TodoList;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.io.*;
 
@@ -26,10 +27,13 @@ public class ToDo {
                 date = date.replace('/', '-');
                 date = date.replace("%", "");
                 DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                LocalDate formattedDate = LocalDate.parse(date, pattern);
-                System.out.println(formattedDate);
-                if (formattedDate.isBefore(LocalDate.now()) && status.contains("incomplete")) {
-                    Variable.setValue(name, "incomplete", "overdue");
+                try {
+                    LocalDate formattedDate = LocalDate.parse(date, pattern);
+                    if (formattedDate.isBefore(LocalDate.now()) && status.contains("incomplete")) {
+                        Variable.setValue(name, "incomplete", "overdue");
+                    }
+                } catch (DateTimeParseException e) {
+                    throw new DateTimeParseException("Invalid date for" + name, date, 0);
                 }
             }
         }
