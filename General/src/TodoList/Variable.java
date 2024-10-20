@@ -53,4 +53,17 @@ public class Variable {
             prop.store(writer, null);
         }
     }
+
+    public static void setValue(String key, String oldValue, String newValue) throws IOException {
+        loadProperties();
+        String currentValue = prop.getProperty(key);
+        if (currentValue.contains(oldValue)) {
+            currentValue = currentValue.replace(oldValue, newValue);
+        }
+        prop.setProperty(key, currentValue);
+
+        try (FileWriter writer = new FileWriter(propPath)) {
+            prop.store(writer, null);
+        }
+    }
 }

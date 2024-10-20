@@ -1,5 +1,7 @@
 package TodoList;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.io.*;
 
@@ -16,6 +18,24 @@ public class ToDo {
 
     private static void loadTasks() throws IOException {
         tasks.load(new FileInputStream(propPath));
+        for (String name : tasks.stringPropertyNames()) {
+            String status = tasks.getProperty(name);
+            String[] values = status.split(",");
+            if (status.contains("%")) {
+                String date = values[2];
+                System.out.println(date);
+                date = date.replace('/', '-');
+                System.out.println(date);
+                date = date.replace("%", "");
+                System.out.println(date);
+                DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                LocalDate formattedDate = LocalDate.parse(date, pattern);
+                System.out.println(formattedDate);
+                if (formattedDate.isBefore(LocalDate.now()) && status.contains("incomplete")) {
+                    Variable.setValue(name, "incomplete", "overdue");
+                }
+            }
+        }
     }
 
     public static void addTask() throws IOException {
@@ -24,10 +44,9 @@ public class ToDo {
             System.out.print("Enter priority level: "); String priority = input.nextLine();
             Variable.storeVariable(name, "incomplete");
             Variable.addValueToKey(name, "`" + priority);
-            System.out.print("Add due date? "); choice = input.nextLine();
-            if (choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("y")) {
-                System.out.print("Enter date: (dd/mm) "); choice = input.nextLine();
-                Variable.addValueToKey(name, "%"+choice+"/2024");
+            System.out.print("Enter date: (dd/mm) "); choice = input.nextLine();
+            if (!choice.isEmpty()) {
+                Variable.addValueToKey(name, "%" + choice + "/2024");
             }
             System.out.printf(ansi.green + "Added '%s'%n" + ansi.reset, name);
         } else {
@@ -51,7 +70,7 @@ public class ToDo {
         loadTasks();
         System.out.print("Which task? "); String name = input.nextLine();
         if (tasks.containsKey(name)) {
-            if (tasks.getProperty(name).contains("incomplete")) {
+            if (tasks.getProperty(name).contains("incomplete") || tasks.getProperty(name).contains("overdue")) {
                 String complete = tasks.getProperty(name).replace("incomplete,", "complete,");
                 Variable.storeVariable(name, complete);
                 System.out.printf("%s'%s' completed!%s%n", ansi.green, name, ansi.reset);
@@ -102,13 +121,15 @@ public class ToDo {
             System.out.print(": " + ansi.red + "Incomplete" + ansi.reset);
         } else if (status.contains("complete")) {
             System.out.print(": " + ansi.green + "Complete" + ansi.reset);
+        } else if (status.contains("overdue")) {
+            System.out.print(": " + ansi.orange + "Overdue" + ansi.reset);
         }
     }
 
     public static void displayTasks(Set<String> attributesToShow) throws IOException {
         loadTasks();
-        printSeparator();
         if (!tasks.isEmpty()) {
+            printSeparator();
             System.out.println(ansi.white + "To do list:" + ansi.reset);
             for (String name : tasks.stringPropertyNames()) {
                 String status = tasks.getProperty(name);
@@ -133,11 +154,11 @@ public class ToDo {
         }
     }
 
-    public static void searchTags() throws IOException {
+    public static void searchTasks() throws IOException {
         loadTasks();
         System.out.print("Filter tasks: "); String tag = input.nextLine();
-        printSeparator();
         if (tag.matches("[0-3]")) {
+            printSeparator();
             System.out.printf(ansi.white + "Priority %s tasks:%n" + ansi.reset, tag);
             for (String name : tasks.stringPropertyNames()) {
                 String[] values = tasks.getProperty(name).split(",");
@@ -147,26 +168,34 @@ public class ToDo {
                         System.out.printf("%s : %sIncomplete%s%n", name, ansi.red, ansi.reset);
                     } else if (tasks.getProperty(name).contains("complete")) {
                         System.out.printf("%s : %sComplete%s%n", name, ansi.green, ansi.reset);
+                    } else if (tasks.getProperty(name).contains("overdue")) {
+                        System.out.printf("%s : %sOverdue%s%n", name, ansi.orange, ansi.reset);
                     }
                 }
             }
-        } else if (tag.equalsIgnoreCase("complete") || tag.equalsIgnoreCase("completed") || tag.equalsIgnoreCase("incomplete")) {
-            if (tag.equalsIgnoreCase("complete")) {
+        } else if (tag.equalsIgnoreCase("complete") || tag.equalsIgnoreCase("completed") || tag.equalsIgnoreCase("incomplete") || tag.equalsIgnoreCase("overdue")) {
+            printSeparator();
+            if (tag.toLowerCase().contains("complete") || !tag.toLowerCase().contains("incomplete")) {
                 System.out.println(ansi.white + "Completed tasks:" + ansi.reset);
-            } else {
+            } else if (tag.equalsIgnoreCase("incomplete")){
                 System.out.println(ansi.white + "Incomplete tasks:" + ansi.reset);
+            } else {
+                System.out.println(ansi.white + "Overdue tasks:" + ansi.reset);
             }
             for (String name : tasks.stringPropertyNames()) {
                 String status = tasks.getProperty(name);
                 String[] values = tasks.getProperty(name).split(",");
 
-                if (tag.equalsIgnoreCase("complete")) {
+                if (tag.toLowerCase().contains("complete") && !tag.toLowerCase().contains("incomplete") && values[0].equalsIgnoreCase("complete")) {
                     System.out.printf("%s : %sComplete%s%n", name, ansi.green, ansi.reset);
-                } else if (tag.equalsIgnoreCase("incomplete")) {
+                } else if (tag.equalsIgnoreCase("incomplete") && values[0].equalsIgnoreCase("incomplete")) {
                     System.out.printf("%s : %sIncomplete%s%n", name, ansi.red, ansi.reset);
+                } else if (tag.equalsIgnoreCase("overdue") && values[0].equalsIgnoreCase("overdue")) {
+                    System.out.printf("%s : %sOverdue%s%n", name, ansi.orange, ansi.reset);
                 }
             }
         } else if (tasks.values().toString().toLowerCase().contains(tag.toLowerCase())) {
+            printSeparator();
             System.out.printf(ansi.white + "Tasks tagged \"%s\":%n" + ansi.reset, tag);
             for (String name : tasks.stringPropertyNames()) {
                 String status = tasks.getProperty(name);
@@ -198,6 +227,7 @@ public class ToDo {
                 }
             }
         } else if (tasks.keySet().toString().contains(tag)) {
+            printSeparator();
             String[] values = tasks.getProperty(tag).split(",");
             String status = tasks.getProperty(tag);
             if (status.contains("incomplete")) {
@@ -232,7 +262,9 @@ public class ToDo {
             System.out.println(ansi.white + "Tasks (completion ↓):" + ansi.reset);
             for (String name : tasks.stringPropertyNames()) {
                 String[] values = tasks.getProperty(name).split(",");
-                if (values[0].contains("complete")) {
+                if (values[0].contains("incomplete")) {
+                    sortedTasks.put("2" + name, tasks.getProperty(name));
+                } else if (values[0].contains("overdue")){
                     sortedTasks.put("1" + name, tasks.getProperty(name));
                 } else {
                     sortedTasks.put("0" + name, tasks.getProperty(name));
@@ -252,6 +284,8 @@ public class ToDo {
                 System.out.printf("%s : %sIncomplete%s%n", name, ansi.red, ansi.reset);
             } else if (status.contains("complete")) {
                 System.out.printf("%s : %sComplete%s%n", name, ansi.green, ansi.reset);
+            } else if (status.contains("overdue")) {
+                System.out.printf("%s : %sOverdue%s%n", name, ansi.orange, ansi.reset);
             }
         }
     }

@@ -20,7 +20,7 @@ public class ansi {
     public static final String yellow_bold = "\033[1;33m";
     public static final String blue_bold = "\033[1;34m";
     public static final String purple_bold = "\033[1;35m";
-    public static final String cyan_bold = "\033[1;36m";
+    public static final String orange_bold = "\033[1;36m";
     public static final String grey_bold = "\033[1;37m";
     public static final String grey_underline = "\033[4;37m";
 }

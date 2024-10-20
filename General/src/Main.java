@@ -20,7 +20,7 @@ public class Main {
                     System.out.println("3. Complete task");
                     System.out.println("4. Remove task");
                     System.out.println("5. Show tasks");
-                    System.out.println("6. Search tags");
+                    System.out.println("6. Search tasks");
                     System.out.println("7. Sort tasks");
                     System.out.println("8. Clear tasks");
                     System.out.println("9. Exit");
@@ -50,7 +50,7 @@ public class Main {
                             ToDo.displayTasks(attributesToShow);
                             break;
                         case "6":
-                            ToDo.searchTags();
+                            ToDo.searchTasks();
                             break;
                         case "7":
                             System.out.println(ansi.white + "Sort by:" + ansi.reset);
