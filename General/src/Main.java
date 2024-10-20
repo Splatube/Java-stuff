@@ -6,12 +6,15 @@ import java.util.*;
 public class Main {
     static Scanner input = new Scanner(System.in);
     static boolean exit = false;
-    public static void main (String[]args) throws IOException {
+    public static void main(String[]args) throws IOException {
         while (!exit) {
             System.out.print("What program would you like to use? "); String choice = input.nextLine();
             if (choice.toLowerCase().contains("todo")) {
                 File taskList = new File("General/src/TodoList/tasks.properties");
-                taskList.createNewFile();
+                if (!taskList.getParentFile().exists())
+                    taskList.getParentFile().mkdirs();
+                if (!taskList.exists())
+                    taskList.createNewFile();
                 while (true) {
                     ToDo.printSeparator();
                     System.out.println(ansi.white + "Options:" + ansi.reset);
