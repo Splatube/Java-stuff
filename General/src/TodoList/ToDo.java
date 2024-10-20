@@ -23,11 +23,8 @@ public class ToDo {
             String[] values = status.split(",");
             if (status.contains("%")) {
                 String date = values[2];
-                System.out.println(date);
                 date = date.replace('/', '-');
-                System.out.println(date);
                 date = date.replace("%", "");
-                System.out.println(date);
                 DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 LocalDate formattedDate = LocalDate.parse(date, pattern);
                 System.out.println(formattedDate);
