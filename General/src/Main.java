@@ -10,7 +10,7 @@ public class Main {
         while (!exit) {
             System.out.print("What program would you like to use? "); String choice = input.nextLine();
             if (choice.toLowerCase().contains("todo")) {
-                File taskList = new File("General/src/TodoList/tasks.properties");
+                File taskList = new File("TodoList/tasks.properties");
                 if (!taskList.getParentFile().exists())
                     taskList.getParentFile().mkdirs();
                 if (!taskList.exists())
